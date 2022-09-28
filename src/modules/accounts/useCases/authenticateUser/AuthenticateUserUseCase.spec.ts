@@ -1,6 +1,5 @@
 import { ICreateUserDTO } from '@modules/accounts/dtos/ICreateUserDTO';
 import { UsersRepositoryInMemory } from '@modules/accounts/repositories/in-memory/UsersRepositoryInMemory';
-import { AppError } from '@shared/errors/AppError';
 
 import { CreateUserUseCase } from '../createUser/CreateUserUseCase';
 import { AuthenticateUserUseCase } from './AuthenticateUserUseCase';
@@ -42,7 +41,7 @@ describe('Authenticate user', () => {
         email: 'Jonas@gmail.com',
         password: '1234',
       }),
-    ).rejects.toEqual(new AppError('Email or password incorrect!'));
+    ).rejects.toEqual(authenticateUserUseCase.errors.incorrectCredentials);
   });
 
   it('should not be able to authenticate with incorrect password', async () => {
@@ -60,6 +59,6 @@ describe('Authenticate user', () => {
         email: user.email,
         password: 'i hate javascript',
       }),
-    ).rejects.toEqual(new AppError('Email or password incorrect!'));
+    ).rejects.toEqual(authenticateUserUseCase.errors.incorrectCredentials);
   });
 });

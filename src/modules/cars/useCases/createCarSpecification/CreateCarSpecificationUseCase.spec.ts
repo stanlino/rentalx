@@ -1,6 +1,5 @@
 import { CarsRepositoryInMemory } from '@modules/cars/repositories/in-memory/CarsRepositoryInMemory';
 import { SpecificationRepositoryInMemory } from '@modules/cars/repositories/in-memory/SpecificationsRepositoryInMemory';
-import { AppError } from '@shared/errors/AppError';
 
 import { CreateCarSpecificationUseCase } from './CreateCarSpecificationUseCase';
 
@@ -27,7 +26,7 @@ describe('create car specification', () => {
         car_id,
         specifications_id,
       }),
-    ).rejects.toEqual(new AppError('Car does not exists!'));
+    ).rejects.toEqual(createCarSpecificationUseCase.errors.carDontExists);
   });
 
   it('should be able to add a new specification to the car', async () => {

@@ -16,6 +16,10 @@ interface IRequest {
 
 @injectable()
 class CreateCarUseCase {
+  public errors = {
+    carAlreadyExists: new AppError('Car already exists!'),
+  };
+
   constructor(
     @inject('CarsRepository')
     private carsRepository: ICarsRepository,
@@ -35,7 +39,7 @@ class CreateCarUseCase {
     );
 
     if (carAlreadyExists) {
-      throw new AppError('Car already exists!');
+      throw this.errors.carAlreadyExists;
     }
 
     const car = await this.carsRepository.create({

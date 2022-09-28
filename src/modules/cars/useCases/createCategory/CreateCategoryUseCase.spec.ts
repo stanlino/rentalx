@@ -1,5 +1,4 @@
 import { CategoriesRepositoryInMemory } from '@modules/cars/repositories/in-memory/CategoriesRepositoryInMemory';
-import { AppError } from '@shared/errors/AppError';
 
 import { CreateCategoryUseCase } from './CreateCategoryUseCase';
 
@@ -38,7 +37,7 @@ describe('Create category', () => {
     await createCategoryUseCase.execute(category);
 
     await expect(createCategoryUseCase.execute(category)).rejects.toEqual(
-      new AppError('Category already exists!'),
+      createCategoryUseCase.errors.categoryAlreadyExists,
     );
   });
 });

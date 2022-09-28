@@ -20,6 +20,10 @@ interface IResponse {
 
 @injectable()
 class AuthenticateUserUseCase {
+  public errors = {
+    incorrectCredentials: new AppError('Email or password incorrect!'),
+  };
+
   constructor(
     @inject('UsersRepository')
     private userRepository: IUsersRepository,
@@ -29,13 +33,13 @@ class AuthenticateUserUseCase {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
-      throw new AppError('Email or password incorrect!');
+      throw this.errors.incorrectCredentials;
     }
 
     const passwordMatch = await compare(password, user.password);
 
     if (!passwordMatch) {
-      throw new AppError('Email or password incorrect!');
+      throw this.errors.incorrectCredentials;
     }
 
     const token = sign({}, '9a4111a7ffd4c2fc43730105eb169f5c', {

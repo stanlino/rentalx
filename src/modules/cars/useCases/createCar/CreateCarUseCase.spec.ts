@@ -1,5 +1,4 @@
 import { CarsRepositoryInMemory } from '@modules/cars/repositories/in-memory/CarsRepositoryInMemory';
-import { AppError } from '@shared/errors/AppError';
 
 import { CreateCarUseCase } from './CreateCarUseCase';
 
@@ -47,7 +46,7 @@ describe('Create car', () => {
         brand: 'Brand car',
         category_id: 'category',
       }),
-    ).rejects.toEqual(new AppError('Car already exists!'));
+    ).rejects.toEqual(createCarUseCase.errors.carAlreadyExists);
   });
 
   it('should be able to create a car with available true by default', async () => {

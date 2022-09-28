@@ -14,6 +14,14 @@ interface IRequest {
 
 @injectable()
 class CreateRentalUseCase {
+  public errors = {
+    carIsUnavailable: new AppError('Car is unavailable!'),
+    rentalOpenToUser: new AppError(
+      `There's a rental in progress for this user!`,
+    ),
+    invalidReturnTime: new AppError('Invalid return time!'),
+  };
+
   constructor(
     @inject('RentalsRepository')
     private rentalsRepository: IRentalsRepository,
@@ -35,14 +43,14 @@ class CreateRentalUseCase {
     );
 
     if (carUnavailable) {
-      throw new AppError('Car is unavailable!');
+      throw this.errors.carIsUnavailable;
     }
 
     const rentalOpenToUser =
       await this.rentalsRepository.findOpenRentalByUserId(user_id);
 
     if (rentalOpenToUser) {
-      throw new AppError(`There's a rental in progress for this user!`);
+      throw this.errors.rentalOpenToUser;
     }
 
     const compare = this.dateProvider.compareInHours(
@@ -51,7 +59,7 @@ class CreateRentalUseCase {
     );
 
     if (compare < minRentalTimeInHours) {
-      throw new AppError('Invalid return time!');
+      throw this.errors.invalidReturnTime;
     }
 
     const rental = await this.rentalsRepository.create({

@@ -10,6 +10,10 @@ interface IRequest {
 
 @injectable()
 class CreateCategoryUseCase {
+  public errors = {
+    categoryAlreadyExists: new AppError('Category already exists!'),
+  };
+
   constructor(
     @inject('CategoriesRepository')
     private categoriesRepository: ICategoriesRepository,
@@ -21,7 +25,7 @@ class CreateCategoryUseCase {
     );
 
     if (categoryAlreadyExists) {
-      throw new AppError('Category already exists!');
+      throw this.errors.categoryAlreadyExists;
     }
 
     this.categoriesRepository.create({ name, description });

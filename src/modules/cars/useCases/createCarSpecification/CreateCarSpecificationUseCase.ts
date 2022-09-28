@@ -12,6 +12,10 @@ interface IRequest {
 
 @injectable()
 class CreateCarSpecificationUseCase {
+  public errors = {
+    carDontExists: new AppError('Car does not exists!'),
+  };
+
   constructor(
     @inject('CarsRepository')
     private CarsRepository: ICarsRepository,
@@ -23,7 +27,7 @@ class CreateCarSpecificationUseCase {
     const carExists = await this.CarsRepository.findById(car_id);
 
     if (!carExists) {
-      throw new AppError('Car does not exists!');
+      throw this.errors.carDontExists;
     }
 
     const specifications = await this.specificationsRepository.findByIds(

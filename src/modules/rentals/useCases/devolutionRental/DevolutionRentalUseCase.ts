@@ -12,6 +12,10 @@ interface IRequest {
 
 @injectable()
 class DevolutionRentalUseCase {
+  public errors = {
+    rentalDontExists: new AppError('Rental does not exists!'),
+  };
+
   constructor(
     @inject('RentalsRepository')
     private rentalsRepository: IRentalsRepository,
@@ -27,7 +31,7 @@ class DevolutionRentalUseCase {
     const minimum_daily = 1;
 
     if (!rental) {
-      throw new AppError('Rental does not exists!');
+      throw this.errors.rentalDontExists;
     }
 
     let daily = this.dateProvider.compareInDays(
